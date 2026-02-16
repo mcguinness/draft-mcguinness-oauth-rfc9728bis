@@ -82,29 +82,24 @@ Table of Contents
    1.  Introduction
    2.  Conventions and Definitions
    3.  Terminology
-   4.  Motivation
-   5.  Update to RFC 9728 Section 3.3
-     5.1.  Original Rule (Replaced)
-     5.2.  Updated Validation Rule
-     5.3.  Unchanged: Validation for Well-Known URI Discovery
-     5.4.  Path Prefix Matching
-   6.  Examples
-     6.1.  Host-Level Resource Identifier
-     6.2.  Path-Level Resource Identifier
-   7.  Client Token Caching Guidance
-     7.1.  Token Cache Key
-     7.2.  Token Reuse Across Protected Resources
-     7.3.  Optimistic Token Reuse
-   8.  Security Considerations
-     8.1.  Preservation of Origin Security Boundary
-     8.2.  Path-Level Isolation
-     8.3.  Token Scope and Audience
-     8.4.  Sender-Constrained Tokens
-     8.5.  Metadata Substitution Within an Origin
-   9.  IANA Considerations
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   4.  Update to RFC 9728 Section 3.3
+     4.1.  Original Rule (Replaced)
+     4.2.  Updated Validation Rule
+     4.3.  Path Prefix Matching
+   5.  Examples
+     5.1.  Host-Level Resource Identifier
+     5.2.  Path-Level Resource Identifier
+   6.  Client Token Caching Guidance
+   7.  Security Considerations
+     7.1.  Preservation of Origin Security Boundary
+     7.2.  Path-Level Isolation
+     7.3.  Token Scope and Audience
+     7.4.  Sender-Constrained Tokens
+     7.5.  Metadata Substitution Within an Origin
+   8.  IANA Considerations
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Acknowledgments
    Document History
    Authors' Addresses
@@ -122,79 +117,6 @@ Table of Contents
    triggered the challenge.  This exact-match rule prevents a malicious
    resource from directing clients to metadata that impersonates a
    different resource.
-
-   However, this rule creates a practical limitation when a resource
-   server exposes multiple protected resources (e.g.,
-   https://api.example.com/accounts, https://api.example.com/
-   transactions, https://api.example.com/profile) that share the same
-   authorization server and token audience.  Under the current rule, a
-   client that discovers metadata for one protected resource cannot
-   determine whether a token obtained for that resource will be accepted
-   at other protected resources on the same server.  The client must
-   either request a new token for each distinct protected resource or
-   rely on out-of-band knowledge.  Related discussion of this problem
-   can be found in [I-D.mcguinness-oauth-resource-token-resp].
-
-   This document makes the following change to [RFC9728]:
-
-   *  *Section 3.3 (Resource Validation)*: The exact-match requirement
-      for resource values obtained via WWW-Authenticate discovery is
-      relaxed to a same-origin, path-prefix match.  The resource value
-      MUST share the same TLS origin (scheme, host, and port) as the
-      request URL, and its path MUST be a prefix of the request URL path
-      on a segment boundary.  This allows a resource server to advertise
-      a resource identifier such as https://api.example.com/ or
-      https://api.example.com/api/v1 that covers multiple protected
-      resources under that path.
-
-   All other aspects of [RFC9728] remain unchanged, including:
-
-   *  The well-known URI construction rules (Section 3.1)
-
-   *  The metadata response format (Section 3.2)
-
-   *  The exact-match validation for direct well-known URI discovery
-      (Section 3.3, first paragraph)
-
-   *  The metadata content requirements (Section 4)
-
-   *  The resource_metadata WWW-Authenticate parameter (Section 5)
-
-2.  Conventions and Definitions
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
-
-3.  Terminology
-
-   This document uses the following terms as defined in the referenced
-   specifications:
-
-   resource identifier:  An HTTPS URI that identifies a protected
-      resource or set of protected resources, as defined in Section 1.2
-      of [RFC9728] and [RFC8707].
-
-   TLS origin:  The combination of scheme, host, and port derived from a
-      URI, as defined in Section 4.3.2 of [RFC9110] for the https
-      scheme.  Two URIs share the same TLS origin if and only if their
-      scheme, host, and port (after applying default port rules) are
-      identical.
-
-   path prefix:  A path that matches the beginning of another path on a
-      segment boundary.  One path is a prefix of another if the two are
-      identical, if the first path ends with / and the second starts
-      with it, or if the second path starts with the first followed by
-      /.  For example, /api/v1 is a path prefix of /api/v1/accounts and
-      /api/v1/, but is NOT a path prefix of /api/v10 or /api/v1admin.
-      The root path / is a path prefix of all paths.
-
-4.  Motivation
-
-   This section is non-normative.  It describes the problem that
-   motivates the change to [RFC9728].
 
    Consider a resource server at https://api.example.com that exposes
    the following protected resources:
@@ -246,7 +168,37 @@ Table of Contents
        URL resource identifier that maps to a given audience, increasing
        configuration complexity.
 
-5.  Update to RFC 9728 Section 3.3
+   This document relaxes the exact-match requirement for resource values
+   obtained via WWW-Authenticate discovery to a same-origin, path-prefix
+   match.  See Section 4 for the normative specification.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Terminology
+
+   This document uses the following terms as defined in the referenced
+   specifications:
+
+   resource identifier:  An HTTPS URI that identifies a protected
+      resource or set of protected resources, as defined in Section 1.2
+      of [RFC9728] and [RFC8707].
+
+   TLS origin:  The combination of scheme, host, and port derived from a
+      URI, as defined in Section 4.3.2 of [RFC9110] for the https
+      scheme.  Two URIs share the same TLS origin if and only if their
+      scheme, host, and port (after applying default port rules) are
+      identical.
+
+   path prefix:  A path that matches the beginning of another path on a
+      segment boundary.  See Section 4.3 for the precise definition.
+
+4.  Update to RFC 9728 Section 3.3
 
    This section contains the normative change to [RFC9728].  It updates
    only the resource validation rule in Section 3.3 of [RFC9728] that
@@ -254,7 +206,7 @@ Table of Contents
    All other requirements in Section 3.3 and the rest of [RFC9728]
    remain in effect.
 
-5.1.  Original Rule (Replaced)
+4.1.  Original Rule (Replaced)
 
    Section 3.3 of [RFC9728] states:
 
@@ -266,9 +218,9 @@ Table of Contents
       response MUST NOT be used.
 
    This document replaces the above requirement with the updated rule in
-   Section 5.2.
+   Section 4.2.
 
-5.2.  Updated Validation Rule
+4.2.  Updated Validation Rule
 
    When a client retrieves protected resource metadata from a URL
    obtained via the resource_metadata parameter in a WWW-Authenticate
@@ -287,7 +239,7 @@ Table of Contents
        for the https scheme (443) MUST be used for comparison.
 
    4.  The path of the resource value MUST be a prefix of the path of
-       the request URL, as defined in Section 5.4.
+       the request URL, as defined in Section 4.3.
 
    If any of these conditions are not met, the client MUST NOT use the
    metadata, consistent with the security requirements of [RFC9728].
@@ -298,19 +250,16 @@ Table of Contents
    in [RFC9728]: any metadata that was valid under the original rule
    remains valid under this update.
 
-5.3.  Unchanged: Validation for Well-Known URI Discovery
+   This update only applies to metadata retrieved via a WWW-Authenticate
+   challenge.  The validation rule for metadata retrieved directly from
+   a well-known URI is NOT changed by this document; the resource value
+   MUST still be identical to the resource identifier from which the
+   well-known URI was derived, as specified in Section 3.3 of [RFC9728].
 
-   The validation rule in Section 3.3 of [RFC9728] for metadata
-   retrieved directly from a well-known URI (i.e., not via a WWW-
-   Authenticate challenge) is NOT changed by this document.  The
-   resource value MUST still be identical to the protected resource's
-   resource identifier value from which the well-known URI was derived,
-   as specified in Section 3.3 of [RFC9728].
-
-5.4.  Path Prefix Matching
+4.3.  Path Prefix Matching
 
    This section defines the path prefix matching algorithm referenced by
-   condition 4 of the updated validation rule in Section 5.2.
+   condition 4 of the updated validation rule in Section 4.2.
 
    The path of the resource value is a prefix of the path of the request
    URL if any of the following conditions hold:
@@ -370,16 +319,18 @@ Table of Contents
 
                                   Table 1
 
-6.  Examples
+5.  Examples
 
    This section is non-normative.  It illustrates how the updated
-   validation rule in Section 5 applies in practice.
+   validation rule in Section 4 applies in practice.
 
-6.1.  Host-Level Resource Identifier
+5.1.  Host-Level Resource Identifier
 
    A resource server at https://api.example.com advertises a host-level
-   resource identifier covering all its protected resources.  When a
-   client requests https://api.example.com/transactions without a token:
+   resource identifier covering all of its protected resources.
+
+   When a client requests https://api.example.com/transactions without a
+   token:
 
    HTTP/1.1 401 Unauthorized
    WWW-Authenticate: Bearer resource_metadata="https://api.example.com/
@@ -391,28 +342,22 @@ Table of Contents
      "resource": "https://api.example.com/",
      "authorization_servers": ["https://as.example.com"],
      "scopes_supported": ["accounts.read", "transactions.read",
-       "profile.read"],
-     "bearer_methods_supported": ["header"],
-     "resource_signing_alg_values_supported": ["RS256"]
+       "profile.read"]
+     ...
    }
 
-   Under the original Section 3.3 rule in [RFC9728], this metadata would
-   be rejected because https://api.example.com/ is not identical to
-   https://api.example.com/transactions.
+   The client validates that https://api.example.com/ shares the same
+   TLS origin as https://api.example.com/transactions and that the path
+   / is a prefix of /transactions.
 
-   Under the updated rule in Section 5.2, the client validates that
-   https://api.example.com/ shares the same TLS origin as
-   https://api.example.com/transactions (conditions 1-3) and that the
-   path / is a prefix of /transactions (condition 4).  All checks
-   succeed, so the client uses https://api.example.com/ as the resource
-   parameter in its token request.
-
-6.2.  Path-Level Resource Identifier
+5.2.  Path-Level Resource Identifier
 
    A resource server at https://platform.example.com exposes two
    independent sets of protected resources under different path
-   prefixes.  When a client requests
-   https://platform.example.com/api/v1/transactions without a token:
+   prefixes.
+
+   When a client requests https://platform.example.com/api/v1/
+   transactions without a token:
 
    HTTP/1.1 401 Unauthorized
    WWW-Authenticate: Bearer resource_metadata=
@@ -424,95 +369,52 @@ Table of Contents
    {
      "resource": "https://platform.example.com/api/v1",
      "authorization_servers": ["https://as.example.com"],
-     "scopes_supported": ["transactions.read", "accounts.read"],
-     "bearer_methods_supported": ["header"]
+     "scopes_supported": ["transactions.read", "accounts.read"]
+     ...
    }
 
    The client validates that https://platform.example.com/api/v1 shares
    the same TLS origin as https://platform.example.com/api/v1/
-   transactions (conditions 1-3) and that the path /api/v1 is a prefix
-   of /api/v1/transactions on a segment boundary (condition 4).  All
-   checks succeed.
+   transactions and that the path /api/v1 is a prefix of /api/v1/
+   transactions on a segment boundary.
 
    A subsequent request to https://platform.example.com/api/v2/reports
    would NOT match the resource https://platform.example.com/api/v1
-   because /api/v1 is not a prefix of /api/v2/reports (condition 4
-   fails).  The client would need to perform a separate discovery for
-   the /api/v2 protected resources.
+   because /api/v1 is not a prefix of /api/v2/reports.  The client would
+   need to perform a separate discovery for the /api/v2 protected
+   resources.
 
-7.  Client Token Caching Guidance
+6.  Client Token Caching Guidance
 
-   This section is non-normative.  It describes one approach clients MAY
-   use to take advantage of the relaxed resource matching rule.  Clients
-   are not required to implement token caching; a client that requests a
-   fresh token for every protected resource access remains fully
-   compliant.
+   This section is non-normative.
 
-7.1.  Token Cache Key
+   A client MAY maintain a token cache keyed by the tuple
+   (authorization_server, resource), where authorization_server is the
+   issuer identifier from which the token was obtained and resource is
+   the resource value from the protected resource metadata.  A cached
+   token MAY be reused for requests to any URL whose path falls under
+   the same resource path prefix on the same TLS origin, provided the
+   token was obtained from the same authorization server, has not
+   expired, and carries sufficient scopes.
 
-   A client that chooses to cache tokens MAY maintain a token cache
-   (informally, a "token jar") keyed by the tuple:
+   A client MAY also optimistically reuse a cached token when accessing
+   a URL under the same resource path prefix before performing metadata
+   discovery for that URL.  If the resource server rejects the token
+   (e.g., with a 401 response), the client falls back to the standard
+   discovery flow.  The client should not assume that all protected
+   resources under a given path prefix accept the same token.
 
-   (authorization_server, resource)
-
-   where:
-
-   *  authorization_server is the issuer identifier of the authorization
-      server from which the token was obtained.
-
-   *  resource is the resource value from the protected resource
-      metadata.
-
-7.2.  Token Reuse Across Protected Resources
-
-   When a client needs to access a protected resource and already holds
-   a non-expired token in its cache, it MAY reuse that token if all of
-   the following conditions are met:
-
-   1.  The client has previously retrieved protected resource metadata
-       for the target protected resource (or another protected resource
-       whose resource identifier's path is a prefix of the target URL's
-       path on the same TLS origin) that contains the same resource
-       value.
-
-   2.  The cached token was obtained from the same authorization server
-       identified in the metadata for the target protected resource.
-
-   3.  The cached token has not expired and has not been revoked.
-
-   4.  The scopes associated with the cached token are sufficient for
-       the intended request, to the extent the client can determine
-       this.
-
-   If any condition is not met, the client would need to perform a new
-   token request.
-
-7.3.  Optimistic Token Reuse
-
-   A client that has discovered a resource identifier for one protected
-   resource MAY optimistically attempt to use a cached token when
-   accessing another protected resource whose URL path starts with the
-   resource path, even before performing metadata discovery for that
-   protected resource.  If the resource server rejects the token (e.g.,
-   with a 401 response), the client falls back to the standard discovery
-   flow for the new protected resource.
-
-   This optimistic reuse can reduce latency in common cases but does not
-   relax any security requirements.  The client should be prepared for
-   the token to be rejected and should not assume that all protected
-   resources under a given resource path prefix accept the same token.
-
-8.  Security Considerations
+7.  Security Considerations
 
    The security considerations of [RFC9728] (Section 7) continue to
    apply in full.  This section describes how the updated validation
-   rule in Section 5 interacts with those considerations.
+   rule in Section 4 interacts with those considerations.
 
-8.1.  Preservation of Origin Security Boundary
+7.1.  Preservation of Origin Security Boundary
 
    Section 7.3 of [RFC9728] describes impersonation attacks where an
    adversary publishes metadata claiming to represent a legitimate
-   resource.  The updated validation rule in Section 5.2 maintains the
+   resource.  The updated validation rule in Section 4.2 maintains the
    fundamental security property that prevents these attacks: the TLS
    origin check (conditions 1-3) ensures that the resource value is
    authoritative for the same server that issued the challenge.  An
@@ -520,7 +422,7 @@ Table of Contents
    to accept metadata with a resource value of https://api.example.com/,
    because the origins differ.
 
-8.2.  Path-Level Isolation
+7.2.  Path-Level Isolation
 
    Some deployments host multiple independent services on the same
    origin, distinguished only by path (e.g., a shared hosting
@@ -540,7 +442,7 @@ Table of Contents
    obtained for one service cannot be inadvertently reused for another
    service on the same origin.
 
-8.3.  Token Scope and Audience
+7.3.  Token Scope and Audience
 
    Relaxing the resource matching rule does not change the authorization
    server's responsibility to enforce audience restrictions on issued
@@ -551,7 +453,7 @@ Table of Contents
    which MAY issue a token with a narrower or broader audience at its
    discretion.
 
-8.4.  Sender-Constrained Tokens
+7.4.  Sender-Constrained Tokens
 
    Deployments using sender-constrained tokens (e.g., DPoP [RFC9449])
    are compatible with the relaxed matching rule defined in this
@@ -560,9 +462,9 @@ Table of Contents
    resources on the same origin does not weaken the sender-constraint
    security property.
 
-8.5.  Metadata Substitution Within an Origin
+7.5.  Metadata Substitution Within an Origin
 
-   The updated validation rule in Section 5.2 permits a protected
+   The updated validation rule in Section 4.2 permits a protected
    resource to direct clients to metadata with a resource value that
    differs from the URL of the protected resource (but shares the same
    origin and satisfies the path-prefix condition).  This means that a
@@ -574,13 +476,13 @@ Table of Contents
    [RFC9728] rule, since a compromised protected resource can already
    return arbitrary WWW-Authenticate challenges.
 
-9.  IANA Considerations
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-10.  References
+9.  References
 
-10.1.  Normative References
+9.1.  Normative References
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
@@ -620,7 +522,7 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-10.2.  Informative References
+9.2.  Informative References
 
    [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
