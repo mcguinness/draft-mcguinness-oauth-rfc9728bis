@@ -14,11 +14,11 @@ keyword:
   - "Resource Indicator"
 venue:
   group: "Web Authorization Protocol"
-  type: Working Group
-  mail: oauth@ietf.org
-  arch: https://mailarchive.ietf.org/arch/browse/oauth/
-  github: mcguinness/draft-mcguinness-oauth-rfc9728bis
-  latest: https://mcguinness.github.io/draft-mcguinness-oauth-rfc9728bis/draft-mcguinness-oauth-rfc9728bis.html
+  type: "Working Group"
+  mail: "oauth@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
+  github: "mcguinness/draft-mcguinness-oauth-rfc9728bis"
+  latest: "https://mcguinness.github.io/draft-mcguinness-oauth-rfc9728bis/draft-mcguinness-oauth-rfc9728bis.html"
 
 author:
  -
