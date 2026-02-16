@@ -276,10 +276,9 @@ validation rule in {{update-section-3-3}} applies in practice.
 
 ## Host-Level Resource Identifier
 
-A resource server at `https://api.example.com` advertises a
-host-level resource identifier covering all its protected resources.
-When a client requests `https://api.example.com/transactions`
-without a token:
+A resource server at `https://api.example.com` advertises a host-level resource identifier covering all of its protected resources.
+
+When a client requests `https://api.example.com/transactions` without a token:
 
 ~~~
 HTTP/1.1 401 Unauthorized
@@ -294,28 +293,18 @@ The metadata response contains:
   "resource": "https://api.example.com/",
   "authorization_servers": ["https://as.example.com"],
   "scopes_supported": ["accounts.read", "transactions.read",
-    "profile.read"],
-  "bearer_methods_supported": ["header"],
-  "resource_signing_alg_values_supported": ["RS256"]
+    "profile.read"]
+  ...
 }
 ~~~
 
-Under the original Section 3.3 rule in {{RFC9728}}, this metadata
-would be rejected because `https://api.example.com/` is not
-identical to `https://api.example.com/transactions`.
-
-Under the updated rule in {{updated-rule}}, the client validates
-that `https://api.example.com/` shares the same TLS origin as
-`https://api.example.com/transactions` (conditions 1-3) and that
-the path `/` is a prefix of `/transactions` (condition 4).  All
-checks succeed, so the client uses `https://api.example.com/` as
-the `resource` parameter in its token request.
+The client validates that `https://api.example.com/` shares the same TLS origin as `https://api.example.com/transactions` and that the path `/` is a prefix of `/transactions`.
 
 ## Path-Level Resource Identifier
 
-A resource server at `https://platform.example.com` exposes two
-independent sets of protected resources under different path
-prefixes.  When a client requests
+A resource server at `https://platform.example.com` exposes two independent sets of protected resources under different path prefixes.
+
+When a client requests
 `https://platform.example.com/api/v1/transactions` without a token:
 
 ~~~
@@ -331,22 +320,21 @@ The metadata response contains:
 {
   "resource": "https://platform.example.com/api/v1",
   "authorization_servers": ["https://as.example.com"],
-  "scopes_supported": ["transactions.read", "accounts.read"],
-  "bearer_methods_supported": ["header"]
+  "scopes_supported": ["transactions.read", "accounts.read"]
+  ...
 }
 ~~~
 
 The client validates that `https://platform.example.com/api/v1`
 shares the same TLS origin as
-`https://platform.example.com/api/v1/transactions` (conditions 1-3)
+`https://platform.example.com/api/v1/transactions`
 and that the path `/api/v1` is a prefix of `/api/v1/transactions`
-on a segment boundary (condition 4).  All checks succeed.
+on a segment boundary.
 
 A subsequent request to
 `https://platform.example.com/api/v2/reports` would NOT match the
 resource `https://platform.example.com/api/v1` because `/api/v1` is
-not a prefix of `/api/v2/reports` (condition 4 fails).  The client
-would need to perform a separate discovery for the `/api/v2`
+not a prefix of `/api/v2/reports`.  The client would need to perform a separate discovery for the `/api/v2`
 protected resources.
 
 # Client Token Caching Guidance {#token-caching}
