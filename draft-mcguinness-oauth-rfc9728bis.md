@@ -141,9 +141,7 @@ If any of these conditions are not met, the client MUST NOT use the metadata, co
 
 Note that when the `resource` value is identical to the request URL, all four conditions are trivially satisfied.  This means the updated rule is fully backwards compatible with the original exact-match rule in {{RFC9728}}: any metadata that was valid under the original rule remains valid under this update.
 
-## Unchanged: Validation for Well-Known URI Discovery
-
-The validation rule in Section 3.3 of {{RFC9728}} for metadata retrieved directly from a well-known URI (i.e., not via a WWW-Authenticate challenge) is NOT changed by this document. The `resource` value MUST still be identical to the protected resource's resource identifier value from which the well-known URI was derived, as specified in Section 3.3 of {{RFC9728}}.
+This update only applies to metadata retrieved via a WWW-Authenticate challenge. The validation rule for metadata retrieved directly from a well-known URI is NOT changed by this document; the `resource` value MUST still be identical to the resource identifier from which the well-known URI was derived, as specified in Section 3.3 of {{RFC9728}}.
 
 ## Path Prefix Matching {#path-prefix-matching}
 
