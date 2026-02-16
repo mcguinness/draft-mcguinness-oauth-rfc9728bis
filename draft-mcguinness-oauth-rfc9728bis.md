@@ -131,13 +131,7 @@ TLS origin:
 
 path prefix:
 : A path that matches the beginning of another path on a segment
-  boundary.  One path is a prefix of another if the two are
-  identical, if the first path ends with `/` and the second starts
-  with it, or if the second path starts with the first followed by
-  `/`.  For example, `/api/v1` is a path prefix of
-  `/api/v1/accounts` and `/api/v1/`, but is NOT a path prefix of
-  `/api/v10` or `/api/v1admin`.  The root path `/` is a path prefix
-  of all paths.
+  boundary.  See {{path-prefix-matching}} for the precise definition.
 
 # Motivation {#motivation}
 
