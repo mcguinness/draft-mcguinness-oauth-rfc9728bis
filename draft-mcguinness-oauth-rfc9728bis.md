@@ -70,8 +70,7 @@ Under the current Section 3.3 rule in {{RFC9728}}, when a client calls `https://
 
 ~~~
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://api.example.com/
-  .well-known/oauth-protected-resource/transactions"
+WWW-Authenticate: Bearer resource_metadata="https://api.example.com/.well-known/oauth-protected-resource/transactions"
 ~~~
 
 The client retrieves the metadata, which per Section 3.3 of {{RFC9728}} MUST contain a `resource` value identical to the request URL:
@@ -94,7 +93,7 @@ When the client subsequently needs to access `https://api.example.com/accounts`,
 
 3. The authorization server must understand and enumerate every per-URL resource identifier that maps to a given audience, increasing configuration complexity.
 
-This document relaxes the exact-match requirement for `resource` values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
+To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
 
 # Conventions and Definitions
 
@@ -113,6 +112,9 @@ TLS origin:
 path prefix:
 : A path that matches the beginning of another path on a segment boundary.  See {{path-prefix-matching}} for the precise definition.
 
+request URL:
+: The URL the client used to make the request that triggered the WWW-Authenticate challenge.
+
 # Update to RFC 9728 Section 3.3 {#update-section-3-3}
 
 This section contains the normative change to {{RFC9728}}.  It updates only the resource validation rule in Section 3.3 of {{RFC9728}} that applies when metadata is retrieved via a WWW-Authenticate challenge.  All other requirements in Section 3.3 and the rest of {{RFC9728}} remain in effect.
@@ -121,7 +123,7 @@ This section contains the normative change to {{RFC9728}}.  It updates only the 
 
 Section 3.3 of {{RFC9728}} states:
 
-> If the protected resource metadata was retrieved from a URL returned by the protected resource via the WWW-Authenticate `resource_metadata` parameter, then the `resource` value returned MUST be identical to the URL that the client used to make the request. [...] If these values are not identical, the data contained in the response MUST NOT be used.
+> If the protected resource metadata was retrieved from a URL returned by the protected resource via the WWW-Authenticate `resource_metadata` parameter, then the `resource` value returned MUST be identical to the URL that the client used to make the request to the resource server. If these values are not identical, the data contained in the response MUST NOT be used.
 
 This document replaces the above requirement with the updated rule in {{updated-rule}}.
 
@@ -163,6 +165,7 @@ The following table illustrates the matching behavior:
 
 | `resource` path | Request URL path         | Match?  |
 |:----------------|:-------------------------|:--------|
+| `/`             | `/`                      | Yes     |
 | `/`             | `/accounts`              | Yes     |
 | `/`             | `/api/v1/accounts`       | Yes     |
 | `/api`          | `/api/v1/accounts`       | Yes     |
@@ -189,8 +192,7 @@ When a client requests `https://api.example.com/transactions` without a token:
 
 ~~~
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://api.example.com/
-  .well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer resource_metadata="https://api.example.com/.well-known/oauth-protected-resource"
 ~~~
 
 The metadata response contains:
@@ -215,9 +217,7 @@ When a client requests `https://platform.example.com/api/v1/transactions` withou
 
 ~~~
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata=
-  "https://platform.example.com/.well-known/
-  oauth-protected-resource/api/v1"
+WWW-Authenticate: Bearer resource_metadata="https://platform.example.com/.well-known/oauth-protected-resource/api/v1"
 ~~~
 
 The metadata response contains:
