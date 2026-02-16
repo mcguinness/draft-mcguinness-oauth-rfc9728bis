@@ -237,39 +237,11 @@ A subsequent request to `https://platform.example.com/api/v2/reports` would NOT 
 
 # Client Token Caching Guidance {#token-caching}
 
-This section is non-normative.  It describes one approach clients MAY use to take advantage of the relaxed resource matching rule. Clients are not required to implement token caching; a client that requests a fresh token for every protected resource access remains fully compliant.
+This section is non-normative.
 
-## Token Cache Key
+A client MAY maintain a token cache keyed by the tuple `(authorization_server, resource)`, where `authorization_server` is the issuer identifier from which the token was obtained and `resource` is the `resource` value from the protected resource metadata.  A cached token MAY be reused for requests to any URL whose path falls under the same `resource` path prefix on the same TLS origin, provided the token was obtained from the same authorization server, has not expired, and carries sufficient scopes.
 
-A client that chooses to cache tokens MAY maintain a token cache (informally, a "token jar") keyed by the tuple:
-
-    (authorization_server, resource)
-
-where:
-
-- `authorization_server` is the issuer identifier of the authorization server from which the token was obtained.
-
-- `resource` is the `resource` value from the protected resource metadata.
-
-## Token Reuse Across Protected Resources
-
-When a client needs to access a protected resource and already holds a non-expired token in its cache, it MAY reuse that token if all of the following conditions are met:
-
-1. The client has previously retrieved protected resource metadata for the target protected resource (or another protected resource whose resource identifier's path is a prefix of the target URL's path on the same TLS origin) that contains the same `resource` value.
-
-2. The cached token was obtained from the same authorization server identified in the metadata for the target protected resource.
-
-3. The cached token has not expired and has not been revoked.
-
-4. The scopes associated with the cached token are sufficient for the intended request, to the extent the client can determine this.
-
-If any condition is not met, the client would need to perform a new token request.
-
-## Optimistic Token Reuse
-
-A client that has discovered a resource identifier for one protected resource MAY optimistically attempt to use a cached token when accessing another protected resource whose URL path starts with the `resource` path, even before performing metadata discovery for that protected resource.  If the resource server rejects the token (e.g., with a 401 response), the client falls back to the standard discovery flow for the new protected resource.
-
-This optimistic reuse can reduce latency in common cases but does not relax any security requirements.  The client should be prepared for the token to be rejected and should not assume that all protected resources under a given resource path prefix accept the same token.
+A client MAY also optimistically reuse a cached token when accessing a URL under the same resource path prefix before performing metadata discovery for that URL.  If the resource server rejects the token (e.g., with a 401 response), the client falls back to the standard discovery flow.  The client should not assume that all protected resources under a given path prefix accept the same token.
 
 
 # Security Considerations
