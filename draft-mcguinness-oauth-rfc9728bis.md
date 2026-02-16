@@ -75,69 +75,6 @@ request that triggered the challenge.  This exact-match rule prevents
 a malicious resource from directing clients to metadata that
 impersonates a different resource.
 
-However, this rule creates a practical limitation when a resource
-server exposes multiple protected resources (e.g.,
-`https://api.example.com/accounts`,
-`https://api.example.com/transactions`,
-`https://api.example.com/profile`) that share the same authorization
-server and token audience.  Under the current rule, a client that
-discovers metadata for one protected resource cannot determine
-whether a token obtained for that resource will be accepted at
-other protected resources on the same server.  The client must
-either request a new token for each distinct protected resource or
-rely on out-of-band knowledge.  Related discussion of this problem
-can be found in {{I-D.mcguinness-oauth-resource-token-resp}}.
-
-This document makes the following change to {{RFC9728}}:
-
-- **Section 3.3 (Resource Validation)**: The exact-match requirement
-  for `resource` values obtained via WWW-Authenticate discovery is
-  relaxed to a same-origin, path-prefix match.  The `resource` value
-  MUST share the same TLS origin (scheme, host, and port) as the
-  request URL, and its path MUST be a prefix of the request URL path
-  on a segment boundary.  This allows a resource server to advertise
-  a resource identifier such as `https://api.example.com/` or
-  `https://api.example.com/api/v1` that covers multiple protected
-  resources under that path.
-
-All other aspects of {{RFC9728}} remain unchanged, including:
-
-- The well-known URI construction rules (Section 3.1)
-- The metadata response format (Section 3.2)
-- The exact-match validation for direct well-known URI discovery
-  (Section 3.3, first paragraph)
-- The metadata content requirements (Section 4)
-- The `resource_metadata` WWW-Authenticate parameter (Section 5)
-
-# Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
-
-# Terminology
-
-This document uses the following terms as defined in the referenced
-specifications:
-
-resource identifier:
-: An HTTPS URI that identifies a protected resource or set of
-  protected resources, as defined in Section 1.2 of {{RFC9728}} and
-  {{RFC8707}}.
-
-TLS origin:
-: The combination of scheme, host, and port derived from a URI, as
-  defined in Section 4.3.2 of {{RFC9110}} for the `https` scheme.
-  Two URIs share the same TLS origin if and only if their scheme,
-  host, and port (after applying default port rules) are identical.
-
-path prefix:
-: A path that matches the beginning of another path on a segment
-  boundary.  See {{path-prefix-matching}} for the precise definition.
-
-# Motivation {#motivation}
-
-This section is non-normative.  It describes the problem that
-motivates the change to {{RFC9728}}.
-
 Consider a resource server at `https://api.example.com` that exposes
 the following protected resources:
 
@@ -193,6 +130,34 @@ suboptimal outcomes:
    per-URL resource identifier that maps to a given audience,
    increasing configuration complexity.
 
+This document relaxes the exact-match requirement for `resource`
+values obtained via WWW-Authenticate discovery to a same-origin,
+path-prefix match.  See {{update-section-3-3}} for the normative
+specification.
+
+# Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
+
+# Terminology
+
+This document uses the following terms as defined in the referenced
+specifications:
+
+resource identifier:
+: An HTTPS URI that identifies a protected resource or set of
+  protected resources, as defined in Section 1.2 of {{RFC9728}} and
+  {{RFC8707}}.
+
+TLS origin:
+: The combination of scheme, host, and port derived from a URI, as
+  defined in Section 4.3.2 of {{RFC9110}} for the `https` scheme.
+  Two URIs share the same TLS origin if and only if their scheme,
+  host, and port (after applying default port rules) are identical.
+
+path prefix:
+: A path that matches the beginning of another path on a segment
+  boundary.  See {{path-prefix-matching}} for the precise definition.
 
 # Update to RFC 9728 Section 3.3 {#update-section-3-3}
 
