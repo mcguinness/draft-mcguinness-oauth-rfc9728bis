@@ -46,9 +46,9 @@ informative:
 
 --- abstract
 
-RFC 9728 defines OAuth 2.0 Protected Resource Metadata, enabling clients to dynamically discover the authorization requirements of protected resources.  Section 3.3 of RFC 9728 requires that when protected resource metadata is obtained via a WWW-Authenticate challenge, the `resource` value in the metadata MUST exactly match the URL the client used to access the protected resource.
+RFC 9728 defines OAuth 2.0 Protected Resource Metadata, enabling clients to dynamically discover the authorization requirements of protected resources.  Section 3.3 of RFC 9728 requires that when protected resource metadata is obtained via a `WWW-Authenticate` challenge, the `resource` value in the metadata MUST exactly match the URL the client used to access the protected resource, limiting the applicability of the specification.
 
-This document updates the resource validation rule in Section 3.3 of RFC 9728 to permit the `resource` value to be any URI that shares the same TLS origin (scheme, host, and port) as the requested URL and whose path is a prefix of the request URL path. All other aspects of RFC 9728 remain unchanged.
+This document updates the resource validation rule in Section 3.3 of RFC 9728 to permit the `resource` value to be any URI that shares the same TLS origin (scheme, host, and port) as the requested URL and whose path is a prefix of the request URL path. This enables a wider range of use cases for the `WWW-Authenticate` response. All other aspects of RFC 9728 remain unchanged.
 
 --- middle
 
@@ -56,7 +56,7 @@ This document updates the resource validation rule in Section 3.3 of RFC 9728 to
 
 This document updates one specific aspect of OAuth 2.0 Protected Resource Metadata {{RFC9728}}: the resource validation rule defined in Section 3.3.
 
-Section 3.3 of {{RFC9728}} requires that when a client retrieves protected resource metadata from a URL obtained via a WWW-Authenticate challenge, the `resource` value in the metadata response MUST be identical to the URL the client used to make the request that triggered the challenge.  This exact-match rule prevents a malicious resource from directing clients to metadata that impersonates a different resource.
+Section 3.3 of {{RFC9728}} requires that when a client retrieves protected resource metadata from a URL obtained via a `WWW-Authenticate` challenge, the `resource` value in the metadata response MUST be identical to the URL the client used to make the request that triggered the challenge.  This exact-match rule is intended to prevent a malicious resource from directing clients to metadata that impersonates a different resource.
 
 Consider a resource server at `https://api.example.com` that exposes the following protected resources:
 
@@ -88,12 +88,10 @@ The client then requests a token using `https://api.example.com/transactions` as
 When the client subsequently needs to access `https://api.example.com/accounts`, it faces one of the following suboptimal outcomes:
 
 1. It repeats the entire discovery and token-request flow for the new protected resource, wasting a round trip to the authorization server.
-
 2. It speculatively reuses the existing token, which may work but is not grounded in any protocol signal from the resource server.
-
 3. The authorization server must understand and enumerate every per-URL resource identifier that maps to a given audience, increasing configuration complexity.
 
-To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
+To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via `WWW-Authenticate` discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
 
 # Conventions and Definitions
 
@@ -117,33 +115,30 @@ request URL:
 
 # Update to RFC 9728 Section 3.3 {#update-section-3-3}
 
-This section contains the normative change to {{RFC9728}}.  It updates only the resource validation rule in Section 3.3 of {{RFC9728}} that applies when metadata is retrieved via a WWW-Authenticate challenge.  All other requirements in Section 3.3 and the rest of {{RFC9728}} remain in effect.
+This section contains the normative change to {{RFC9728}}.  It updates only the resource validation rule in Section 3.3 of {{RFC9728}} that applies when metadata is retrieved via a `WWW-Authenticate` challenge.  All other requirements in Section 3.3 and the rest of {{RFC9728}} remain in effect.
 
 ## Original Rule (Replaced)
 
 Section 3.3 of {{RFC9728}} states:
 
-> If the protected resource metadata was retrieved from a URL returned by the protected resource via the WWW-Authenticate `resource_metadata` parameter, then the `resource` value returned MUST be identical to the URL that the client used to make the request to the resource server. If these values are not identical, the data contained in the response MUST NOT be used.
+> If the protected resource metadata was retrieved from a URL returned by the protected resource via the `WWW-Authenticate` `resource_metadata` parameter, then the `resource` value returned MUST be identical to the URL that the client used to make the request to the resource server. If these values are not identical, the data contained in the response MUST NOT be used.
 
 This document replaces the above requirement with the updated rule in {{updated-rule}}.
 
 ## Updated Validation Rule {#updated-rule}
 
-When a client retrieves protected resource metadata from a URL obtained via the `resource_metadata` parameter in a WWW-Authenticate challenge (as defined in Section 5 of {{RFC9728}}), the client MUST verify ALL of the following conditions using the `resource` value from the metadata response and the URL the client used to make the request that triggered the challenge:
+When a client retrieves protected resource metadata from a URL obtained via the `resource_metadata` parameter in a `WWW-Authenticate` challenge (as defined in Section 5 of {{RFC9728}}), the client MUST verify ALL of the following conditions using the `resource` value from the metadata response and the URL the client used to make the request that triggered the challenge:
 
 1. The scheme of the `resource` value MUST be `https`.
-
 2. The host of the `resource` value MUST be identical (using case-insensitive comparison) to the host of the request URL.
-
 3. The port of the `resource` value MUST be identical to the port of the request URL.  If either URL omits the port, the default port for the `https` scheme (443) MUST be used for comparison.
-
 4. The path of the `resource` value MUST be a prefix of the path of the request URL, as defined in {{path-prefix-matching}}.
 
 If any of these conditions are not met, the client MUST NOT use the metadata, consistent with the security requirements of {{RFC9728}}.
 
 Note that when the `resource` value is identical to the request URL, all four conditions are trivially satisfied.  This means the updated rule is fully backwards compatible with the original exact-match rule in {{RFC9728}}: any metadata that was valid under the original rule remains valid under this update.
 
-This update only applies to metadata retrieved via a WWW-Authenticate challenge. The validation rule for metadata retrieved directly from a well-known URI is NOT changed by this document; the `resource` value MUST still be identical to the resource identifier from which the well-known URI was derived, as specified in Section 3.3 of {{RFC9728}}.
+This update only applies to metadata retrieved via a `WWW-Authenticate challenge`. The validation rule for metadata retrieved directly from a well-known URI is NOT changed by this document; the `resource` value MUST still be identical to the resource identifier from which the well-known URI was derived, as specified in Section 3.3 of {{RFC9728}}.
 
 ## Path Prefix Matching {#path-prefix-matching}
 
@@ -281,7 +276,7 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the members of the OAuth Working Group for their feedback and discussion on the challenges of dynamic resource discovery and cross-resource token reuse.
+The authors would like to thank the members of the OAuth Working Group and MCP Authorization Working Group for their feedback and discussion on the challenges of dynamic resource discovery and cross-resource token reuse.
 
 # Document History
 {:numbered="false"}
