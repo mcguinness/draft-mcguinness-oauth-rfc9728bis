@@ -6,7 +6,7 @@ Web Authorization Protocol                                 K. McGuinness
 Internet-Draft                                               Independent
 Updates: 9728 (if approved)                                   A. Parecki
 Intended status: Standards Track                                    Okta
-Expires: 20 August 2026                                 16 February 2026
+Expires: 22 August 2026                                 18 February 2026
 
 
   Update to OAuth 2.0 Protected Resource Metadata Resource Identifier
@@ -20,13 +20,15 @@ Abstract
    protected resources.  Section 3.3 of RFC 9728 requires that when
    protected resource metadata is obtained via a WWW-Authenticate
    challenge, the resource value in the metadata MUST exactly match the
-   URL the client used to access the protected resource.
+   URL the client used to access the protected resource, limiting the
+   applicability of the specification.
 
    This document updates the resource validation rule in Section 3.3 of
    RFC 9728 to permit the resource value to be any URI that shares the
    same TLS origin (scheme, host, and port) as the requested URL and
-   whose path is a prefix of the request URL path.  All other aspects of
-   RFC 9728 remain unchanged.
+   whose path is a prefix of the request URL path.  This enables a wider
+   range of use cases for the WWW-Authenticate response.  All other
+   aspects of RFC 9728 remain unchanged.
 
 About This Document
 
@@ -61,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 August 2026.
+   This Internet-Draft will expire on 22 August 2026.
 
 Copyright Notice
 
@@ -114,9 +116,9 @@ Table of Contents
    protected resource metadata from a URL obtained via a WWW-
    Authenticate challenge, the resource value in the metadata response
    MUST be identical to the URL the client used to make the request that
-   triggered the challenge.  This exact-match rule prevents a malicious
-   resource from directing clients to metadata that impersonates a
-   different resource.
+   triggered the challenge.  This exact-match rule is intended to
+   prevent a malicious resource from directing clients to metadata that
+   impersonates a different resource.
 
    Consider a resource server at https://api.example.com that exposes
    the following protected resources:
@@ -541,8 +543,9 @@ WWW-Authenticate: Bearer resource_metadata="https://platform.example.com/.well-k
 Acknowledgments
 
    The authors would like to thank the members of the OAuth Working
-   Group for their feedback and discussion on the challenges of dynamic
-   resource discovery and cross-resource token reuse.
+   Group and MCP Authorization Working Group for their feedback and
+   discussion on the challenges of dynamic resource discovery and cross-
+   resource token reuse.
 
 Document History
 
