@@ -91,7 +91,11 @@ When the client subsequently needs to access `https://api.example.com/accounts`,
 2. It speculatively reuses the existing token, which may work but is not grounded in any protocol signal from the resource server.
 3. The authorization server must understand and enumerate every per-URL resource identifier that maps to a given audience, increasing configuration complexity.
 
+<<<<<<< HEAD
 To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via `WWW-Authenticate` discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
+=======
+To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.  {{appendix-fine-grained}} provides a non-normative example illustrating how the updated rule applies to APIs with fine-grained resource URLs.
+>>>>>>> a5ec3a7 (added fine grained example)
 
 # Conventions and Definitions
 
@@ -272,6 +276,108 @@ This document has no IANA actions.
 
 
 --- back
+
+# Resource Discovery for Fine-Grained APIs {#appendix-fine-grained}
+
+This non-normative example illustrates a common deployment pattern where the original exact-match validation rule in Section 3.3 of {{RFC9728}} creates a barrier to adoption, and shows how the updated rule in {{update-section-3-3}} resolves it.
+
+## Exact-Match Constraint
+
+Consider a resource server that exposes individual user resources at unique URLs of the form `https://example.com/users/{id}`.
+
+A client that does not yet hold an access token makes a `GET` request to the resource.  The resource server responds with `401 Unauthorized` and a `WWW-Authenticate` challenge identifying the Protected Resource Metadata document:
+
+~~~
+GET /users/100 HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+~~~
+
+Following the discovery procedure in Section 3 of {{RFC9728}}, the client retrieves the metadata document:
+
+~~~
+GET /.well-known/oauth-protected-resource HTTP/1.1
+Host: example.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "resource": "https://example.com/users/",
+  "authorization_servers": ["https://as.example.com"],
+  ...
+}
+~~~
+
+Under the original Section 3.3 rule of {{RFC9728}}, the `resource` value MUST be identical to the request URL `https://example.com/users/100`.  Because the metadata instaed contains an invalid value of `https://example.com/users/`, the client MUST NOT use the metadata.
+
+To satisfy the original exact-match requirement, a resource server has two options.
+
+**Option 1: A distinct metadata document per resource URL.**
+
+Each resource URL requires its own Protected Resource Metadata document, for example:
+
+~~~
+https://example.com/users/100/.well-known/...
+https://example.com/users/101/.well-known/...
+https://example.com/users/102/.well-known/...
+...
+~~~
+
+For APIs where the set of resource URLs is not fixed in advance, this creates an unbounded number of metadata documents to provision, serve, and keep consistent.  In practice this results in increased storage overhead, cache fragmentation, and operational complexity that scales linearly with the number of resources.
+
+**Option 2: Out-of-band knowledge of a representative resource URL.**
+
+To work around the exact-match constraint, a client could first make a `GET` request to a "parent" resource (e.g., `https://example.com/users`) in order to trigger a `401 Unauthorized` response whose associated metadata contains a `resource` value of `https://example.com/users`.  The client would perform discovery against that URL, obtain an access token, and then use the access token to access `https://example.com/users/100`.
+
+~~~
+GET /users HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+~~~
+
+This approach requires out-of-band knowledge of which URL to request first, which is not conveyed by the protocol.  It also introduces an additional round trip before the client can access the originally desired resource, increasing latency and complexity for every new client interaction.
+
+## Resolution with the Updated Rule
+
+The updated validation rule in {{updated-rule}} permits the `resource` value to be any URI that shares the same TLS origin as the request URL and whose path is a prefix of the request URL path.  This allows a single metadata document to cover a collection of related resources, enabling straightforward discovery with no additional round trips or out-of-band coordination.
+
+A client that does not yet hold an access token makes a `GET` request to the resource.  The resource server responds with `401 Unauthorized` and a `WWW-Authenticate` challenge:
+
+~~~
+GET /users/100 HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+~~~
+
+The client retrieves the metadata document:
+
+~~~
+GET /.well-known/oauth-protected-resource HTTP/1.1
+Host: example.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "resource": "https://example.com/users/",
+  "authorization_servers": ["https://as.example.com"],
+  ...
+}
+~~~
+
+The client validates that `https://example.com/users/` shares the same TLS origin as `https://example.com/users/100` and that the path `/users/` is a prefix of `/users/100` on a segment boundary.  Both conditions are satisfied, so the client accepts the metadata.
+
+The client uses `https://example.com/users/` as the resource indicator (per {{RFC8707}}) when requesting an access token from the authorization server.  The resulting access token can be reused for subsequent requests to `https://example.com/users/101`, `https://example.com/users/102`, and so on without repeating the discovery or token-request flow.
 
 # Acknowledgments
 {:numbered="false"}
