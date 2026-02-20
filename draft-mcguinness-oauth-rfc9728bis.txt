@@ -6,7 +6,7 @@ Web Authorization Protocol                                 K. McGuinness
 Internet-Draft                                               Independent
 Updates: 9728 (if approved)                                   A. Parecki
 Intended status: Standards Track                                    Okta
-Expires: 22 August 2026                                 18 February 2026
+Expires: 24 August 2026                                 20 February 2026
 
 
   Update to OAuth 2.0 Protected Resource Metadata Resource Identifier
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 August 2026.
+   This Internet-Draft will expire on 24 August 2026.
 
 Copyright Notice
 
@@ -102,6 +102,9 @@ Table of Contents
    9.  References
      9.1.  Normative References
      9.2.  Informative References
+   Appendix A.  Resource Discovery for Fine-Grained APIs
+     A.1.  Exact-Match Constraint
+     A.2.  Resolution with the Updated Rule
    Acknowledgments
    Document History
    Authors' Addresses
@@ -169,10 +172,16 @@ WWW-Authenticate: Bearer resource_metadata="https://api.example.com/.well-known/
        URL resource identifier that maps to a given audience, increasing
        configuration complexity.
 
-   To avoid these outcomes, this document relaxes the exact-match
-   requirement for resource values obtained via WWW-Authenticate
-   discovery to a same-origin, path-prefix match.  See Section 4 for the
-   normative specification.
+   <<<<<<< HEAD To avoid these outcomes, this document relaxes the
+   exact-match requirement for resource values obtained via WWW-
+   Authenticate discovery to a same-origin, path-prefix match.  See
+   Section 4 for the normative specification. ======= To avoid these
+   outcomes, this document relaxes the exact-match requirement for
+   resource values obtained via WWW-Authenticate discovery to a same-
+   origin, path-prefix match.  See Section 4 for the normative
+   specification.  Appendix A provides a non-normative example
+   illustrating how the updated rule applies to APIs with fine-grained
+   resource URLs. >>>>>>> a5ec3a7 (added fine grained example)
 
 2.  Conventions and Definitions
 
@@ -539,6 +548,138 @@ WWW-Authenticate: Bearer resource_metadata="https://platform.example.com/.well-k
               resp-01, 21 December 2025,
               <https://datatracker.ietf.org/doc/html/draft-mcguinness-
               oauth-resource-token-resp-01>.
+
+Appendix A.  Resource Discovery for Fine-Grained APIs
+
+   This non-normative example illustrates a common deployment pattern
+   where the original exact-match validation rule in Section 3.3 of
+   [RFC9728] creates a barrier to adoption, and shows how the updated
+   rule in Section 4 resolves it.
+
+A.1.  Exact-Match Constraint
+
+   Consider a resource server that exposes individual user resources at
+   unique URLs of the form https://example.com/users/{id}.
+
+   A client that does not yet hold an access token makes a GET request
+   to the resource.  The resource server responds with 401 Unauthorized
+   and a WWW-Authenticate challenge identifying the Protected Resource
+   Metadata document:
+
+   GET /users/100 HTTP/1.1
+   Host: example.com
+
+   HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Bearer resource_metadata=
+     "https://example.com/.well-known/oauth-protected-resource"
+
+   Following the discovery procedure in Section 3 of [RFC9728], the
+   client retrieves the metadata document:
+
+   GET /.well-known/oauth-protected-resource HTTP/1.1
+   Host: example.com
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+
+   {
+     "resource": "https://example.com/users/",
+     "authorization_servers": ["https://as.example.com"],
+     ...
+   }
+
+   Under the original Section 3.3 rule of [RFC9728], the resource value
+   MUST be identical to the request URL https://example.com/users/100.
+   Because the metadata instaed contains an invalid value of
+   https://example.com/users/, the client MUST NOT use the metadata.
+
+   To satisfy the original exact-match requirement, a resource server
+   has two options.
+
+   *Option 1: A distinct metadata document per resource URL.*
+
+   Each resource URL requires its own Protected Resource Metadata
+   document, for example:
+
+   https://example.com/users/100/.well-known/...
+   https://example.com/users/101/.well-known/...
+   https://example.com/users/102/.well-known/...
+   ...
+
+   For APIs where the set of resource URLs is not fixed in advance, this
+   creates an unbounded number of metadata documents to provision,
+   serve, and keep consistent.  In practice this results in increased
+   storage overhead, cache fragmentation, and operational complexity
+   that scales linearly with the number of resources.
+
+   *Option 2: Out-of-band knowledge of a representative resource URL.*
+
+   To work around the exact-match constraint, a client could first make
+   a GET request to a "parent" resource (e.g., https://example.com/
+   users) in order to trigger a 401 Unauthorized response whose
+   associated metadata contains a resource value of https://example.com/
+   users.  The client would perform discovery against that URL, obtain
+   an access token, and then use the access token to access
+   https://example.com/users/100.
+
+   GET /users HTTP/1.1
+   Host: example.com
+
+   HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Bearer resource_metadata=
+     "https://example.com/.well-known/oauth-protected-resource"
+
+   This approach requires out-of-band knowledge of which URL to request
+   first, which is not conveyed by the protocol.  It also introduces an
+   additional round trip before the client can access the originally
+   desired resource, increasing latency and complexity for every new
+   client interaction.
+
+A.2.  Resolution with the Updated Rule
+
+   The updated validation rule in Section 4.2 permits the resource value
+   to be any URI that shares the same TLS origin as the request URL and
+   whose path is a prefix of the request URL path.  This allows a single
+   metadata document to cover a collection of related resources,
+   enabling straightforward discovery with no additional round trips or
+   out-of-band coordination.
+
+   A client that does not yet hold an access token makes a GET request
+   to the resource.  The resource server responds with 401 Unauthorized
+   and a WWW-Authenticate challenge:
+
+   GET /users/100 HTTP/1.1
+   Host: example.com
+
+   HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Bearer resource_metadata=
+     "https://example.com/.well-known/oauth-protected-resource"
+
+   The client retrieves the metadata document:
+
+   GET /.well-known/oauth-protected-resource HTTP/1.1
+   Host: example.com
+
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+
+   {
+     "resource": "https://example.com/users/",
+     "authorization_servers": ["https://as.example.com"],
+     ...
+   }
+
+   The client validates that https://example.com/users/ shares the same
+   TLS origin as https://example.com/users/100 and that the path /users/
+   is a prefix of /users/100 on a segment boundary.  Both conditions are
+   satisfied, so the client accepts the metadata.
+
+   The client uses https://example.com/users/ as the resource indicator
+   (per [RFC8707]) when requesting an access token from the
+   authorization server.  The resulting access token can be reused for
+   subsequent requests to https://example.com/users/101,
+   https://example.com/users/102, and so on without repeating the
+   discovery or token-request flow.
 
 Acknowledgments
 

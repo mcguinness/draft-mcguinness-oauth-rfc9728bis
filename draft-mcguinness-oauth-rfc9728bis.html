@@ -1053,7 +1053,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">McGuinness &amp; Parecki</td>
-<td class="center">Expires 22 August 2026</td>
+<td class="center">Expires 24 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1069,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9728" class="eref">9728</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-18" class="published">18 February 2026</time>
+<time datetime="2026-02-20" class="published">20 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-22">22 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-24">24 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1129,7 +1129,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1230,13 +1230,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-resource-discovery-for-fine" class="internal xref">Resource Discovery for Fine-Grained APIs</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-exact-match-constraint" class="internal xref">Exact-Match Constraint</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-resolution-with-the-updated" class="internal xref">Resolution with the Updated Rule</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-document-history" class="internal xref">Document History</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-document-history" class="internal xref">Document History</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1292,7 +1303,11 @@ WWW-Authenticate: Bearer resource_metadata="https://api.example.com/.well-known/
           <p id="section-1-12.3.1">The authorization server must understand and enumerate every per-URL resource identifier that maps to a given audience, increasing configuration complexity.<a href="#section-1-12.3.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-1-13">To avoid these outcomes, this document relaxes the exact-match requirement for <code>resource</code> values obtained via <code>WWW-Authenticate</code> discovery to a same-origin, path-prefix match.  See <a href="#update-section-3-3" class="auto internal xref">Section 4</a> for the normative specification.<a href="#section-1-13" class="pilcrow">¶</a></p>
+<p id="section-1-13">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+To avoid these outcomes, this document relaxes the exact-match requirement for <code>resource</code> values obtained via <code>WWW-Authenticate</code> discovery to a same-origin, path-prefix match.  See <a href="#update-section-3-3" class="auto internal xref">Section 4</a> for the normative specification.
+=======
+To avoid these outcomes, this document relaxes the exact-match requirement for <code>resource</code> values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See <a href="#update-section-3-3" class="auto internal xref">Section 4</a> for the normative specification.  <a href="#appendix-fine-grained" class="auto internal xref">Appendix A</a> provides a non-normative example illustrating how the updated rule applies to APIs with fine-grained resource URLs.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; a5ec3a7 (added fine grained example)<a href="#section-1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1750,29 +1765,135 @@ WWW-Authenticate: Bearer resource_metadata="https://platform.example.com/.well-k
 </div>
 </section>
 </div>
-<div id="acknowledgments">
+<div id="appendix-fine-grained">
 <section id="appendix-A">
+      <h2 id="name-resource-discovery-for-fine">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-resource-discovery-for-fine" class="section-name selfRef">Resource Discovery for Fine-Grained APIs</a>
+      </h2>
+<p id="appendix-A-1">This non-normative example illustrates a common deployment pattern where the original exact-match validation rule in Section 3.3 of <span>[<a href="#RFC9728" class="cite xref">RFC9728</a>]</span> creates a barrier to adoption, and shows how the updated rule in <a href="#update-section-3-3" class="auto internal xref">Section 4</a> resolves it.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<div id="exact-match-constraint">
+<section id="appendix-A.1">
+        <h3 id="name-exact-match-constraint">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-exact-match-constraint" class="section-name selfRef">Exact-Match Constraint</a>
+        </h3>
+<p id="appendix-A.1-1">Consider a resource server that exposes individual user resources at unique URLs of the form <code>https://example.com/users/{id}</code>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">A client that does not yet hold an access token makes a <code>GET</code> request to the resource.  The resource server responds with <code>401 Unauthorized</code> and a <code>WWW-Authenticate</code> challenge identifying the Protected Resource Metadata document:<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.1-3">
+<pre>
+GET /users/100 HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+</pre><a href="#appendix-A.1-3" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.1-4">Following the discovery procedure in Section 3 of <span>[<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>, the client retrieves the metadata document:<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.1-5">
+<pre>
+GET /.well-known/oauth-protected-resource HTTP/1.1
+Host: example.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "resource": "https://example.com/users/",
+  "authorization_servers": ["https://as.example.com"],
+  ...
+}
+</pre><a href="#appendix-A.1-5" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.1-6">Under the original Section 3.3 rule of <span>[<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>, the <code>resource</code> value <span class="bcp14">MUST</span> be identical to the request URL <code>https://example.com/users/100</code>.  Because the metadata instaed contains an invalid value of <code>https://example.com/users/</code>, the client <span class="bcp14">MUST NOT</span> use the metadata.<a href="#appendix-A.1-6" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-7">To satisfy the original exact-match requirement, a resource server has two options.<a href="#appendix-A.1-7" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-8"><strong>Option 1: A distinct metadata document per resource URL.</strong><a href="#appendix-A.1-8" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-9">Each resource URL requires its own Protected Resource Metadata document, for example:<a href="#appendix-A.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.1-10">
+<pre>
+https://example.com/users/100/.well-known/...
+https://example.com/users/101/.well-known/...
+https://example.com/users/102/.well-known/...
+...
+</pre><a href="#appendix-A.1-10" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.1-11">For APIs where the set of resource URLs is not fixed in advance, this creates an unbounded number of metadata documents to provision, serve, and keep consistent.  In practice this results in increased storage overhead, cache fragmentation, and operational complexity that scales linearly with the number of resources.<a href="#appendix-A.1-11" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-12"><strong>Option 2: Out-of-band knowledge of a representative resource URL.</strong><a href="#appendix-A.1-12" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-13">To work around the exact-match constraint, a client could first make a <code>GET</code> request to a "parent" resource (e.g., <code>https://example.com/users</code>) in order to trigger a <code>401 Unauthorized</code> response whose associated metadata contains a <code>resource</code> value of <code>https://example.com/users</code>.  The client would perform discovery against that URL, obtain an access token, and then use the access token to access <code>https://example.com/users/100</code>.<a href="#appendix-A.1-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.1-14">
+<pre>
+GET /users HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+</pre><a href="#appendix-A.1-14" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.1-15">This approach requires out-of-band knowledge of which URL to request first, which is not conveyed by the protocol.  It also introduces an additional round trip before the client can access the originally desired resource, increasing latency and complexity for every new client interaction.<a href="#appendix-A.1-15" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="resolution-with-the-updated-rule">
+<section id="appendix-A.2">
+        <h3 id="name-resolution-with-the-updated">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-resolution-with-the-updated" class="section-name selfRef">Resolution with the Updated Rule</a>
+        </h3>
+<p id="appendix-A.2-1">The updated validation rule in <a href="#updated-rule" class="auto internal xref">Section 4.2</a> permits the <code>resource</code> value to be any URI that shares the same TLS origin as the request URL and whose path is a prefix of the request URL path.  This allows a single metadata document to cover a collection of related resources, enabling straightforward discovery with no additional round trips or out-of-band coordination.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-2">A client that does not yet hold an access token makes a <code>GET</code> request to the resource.  The resource server responds with <code>401 Unauthorized</code> and a <code>WWW-Authenticate</code> challenge:<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.2-3">
+<pre>
+GET /users/100 HTTP/1.1
+Host: example.com
+
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://example.com/.well-known/oauth-protected-resource"
+</pre><a href="#appendix-A.2-3" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.2-4">The client retrieves the metadata document:<a href="#appendix-A.2-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.2-5">
+<pre>
+GET /.well-known/oauth-protected-resource HTTP/1.1
+Host: example.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "resource": "https://example.com/users/",
+  "authorization_servers": ["https://as.example.com"],
+  ...
+}
+</pre><a href="#appendix-A.2-5" class="pilcrow">¶</a>
+</div>
+<p id="appendix-A.2-6">The client validates that <code>https://example.com/users/</code> shares the same TLS origin as <code>https://example.com/users/100</code> and that the path <code>/users/</code> is a prefix of <code>/users/100</code> on a segment boundary.  Both conditions are satisfied, so the client accepts the metadata.<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-7">The client uses <code>https://example.com/users/</code> as the resource indicator (per <span>[<a href="#RFC8707" class="cite xref">RFC8707</a>]</span>) when requesting an access token from the authorization server.  The resulting access token can be reused for subsequent requests to <code>https://example.com/users/101</code>, <code>https://example.com/users/102</code>, and so on without repeating the discovery or token-request flow.<a href="#appendix-A.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-B">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">The authors would like to thank the members of the OAuth Working Group and MCP Authorization Working Group for their feedback and discussion on the challenges of dynamic resource discovery and cross-resource token reuse.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The authors would like to thank the members of the OAuth Working Group and MCP Authorization Working Group for their feedback and discussion on the challenges of dynamic resource discovery and cross-resource token reuse.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="document-history">
-<section id="appendix-B">
+<section id="appendix-C">
       <h2 id="name-document-history">
 <a href="#name-document-history" class="section-name selfRef">Document History</a>
       </h2>
-<p id="appendix-B-1">-00<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-1">-00<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-B-2.1">
-          <p id="appendix-B-2.1.1">Initial version.<a href="#appendix-B-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C-2.1">
+          <p id="appendix-C-2.1.1">Initial version.<a href="#appendix-C-2.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
