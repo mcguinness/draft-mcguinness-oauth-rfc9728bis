@@ -383,6 +383,10 @@ The authors would like to thank the members of the OAuth Working Group and MCP A
 # Document History
 {:numbered="false"}
 
+-01
+
+- Resolved merge error for publication
+
 -00
 
 - Initial version.
