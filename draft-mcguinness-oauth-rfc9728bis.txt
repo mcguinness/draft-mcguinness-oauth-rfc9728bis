@@ -686,6 +686,10 @@ Acknowledgments
 
 Document History
 
+   -01
+
+   *  Resolved merge error for publication
+
    -00
 
    *  Initial version.
