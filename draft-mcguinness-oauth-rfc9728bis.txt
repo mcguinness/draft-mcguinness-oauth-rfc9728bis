@@ -6,7 +6,7 @@ Web Authorization Protocol                                 K. McGuinness
 Internet-Draft                                               Independent
 Updates: 9728 (if approved)                                   A. Parecki
 Intended status: Standards Track                                    Okta
-Expires: 24 August 2026                                 20 February 2026
+Expires: 28 August 2026                                 24 February 2026
 
 
   Update to OAuth 2.0 Protected Resource Metadata Resource Identifier
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 August 2026.
+   This Internet-Draft will expire on 28 August 2026.
 
 Copyright Notice
 
@@ -172,16 +172,12 @@ WWW-Authenticate: Bearer resource_metadata="https://api.example.com/.well-known/
        URL resource identifier that maps to a given audience, increasing
        configuration complexity.
 
-   <<<<<<< HEAD To avoid these outcomes, this document relaxes the
-   exact-match requirement for resource values obtained via WWW-
-   Authenticate discovery to a same-origin, path-prefix match.  See
-   Section 4 for the normative specification. ======= To avoid these
-   outcomes, this document relaxes the exact-match requirement for
-   resource values obtained via WWW-Authenticate discovery to a same-
-   origin, path-prefix match.  See Section 4 for the normative
-   specification.  Appendix A provides a non-normative example
+   To avoid these outcomes, this document relaxes the exact-match
+   requirement for resource values obtained via WWW-Authenticate
+   discovery to a same-origin, path-prefix match.  See Section 4 for the
+   normative specification.  Appendix A provides a non-normative example
    illustrating how the updated rule applies to APIs with fine-grained
-   resource URLs. >>>>>>> a5ec3a7 (added fine grained example)
+   resource URLs.
 
 2.  Conventions and Definitions
 
