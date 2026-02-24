@@ -91,11 +91,7 @@ When the client subsequently needs to access `https://api.example.com/accounts`,
 2. It speculatively reuses the existing token, which may work but is not grounded in any protocol signal from the resource server.
 3. The authorization server must understand and enumerate every per-URL resource identifier that maps to a given audience, increasing configuration complexity.
 
-<<<<<<< HEAD
-To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via `WWW-Authenticate` discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.
-=======
-To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via WWW-Authenticate discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.  {{appendix-fine-grained}} provides a non-normative example illustrating how the updated rule applies to APIs with fine-grained resource URLs.
->>>>>>> a5ec3a7 (added fine grained example)
+To avoid these outcomes, this document relaxes the exact-match requirement for `resource` values obtained via `WWW-Authenticate` discovery to a same-origin, path-prefix match.  See {{update-section-3-3}} for the normative specification.  {{appendix-fine-grained}} provides a non-normative example illustrating how the updated rule applies to APIs with fine-grained resource URLs.
 
 # Conventions and Definitions
 
